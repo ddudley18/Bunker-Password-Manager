@@ -39,6 +39,23 @@ app.post("/register", async (req, res) => {
     });
 })
 
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({username : username}).exec();
+    if (!user || user.password !== password) {
+        res.status(403);
+        res.json({
+            message: "Invalid Login",
+        });
+        return;
+    }
+    const newUser = new User({ username: username, password: password});
+    await newUser.save();
+    res.send({
+        message: "success",
+    });
+})
+
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
 })

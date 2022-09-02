@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { CredentialsContext } from '../App';
 const { Header, Footer, Sider, Content } = Layout;
 
-export default function Register() {
+export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isError, setIsError] = useState(false);
     const [, setCredentials] = useContext(CredentialsContext);
 
-    const register = () => {
-        axios.post('http://localhost:4000/register', JSON.stringify({
+    const login = () => {
+        axios.post('http://localhost:4000/login', JSON.stringify({
             username: username,
             password: password,
         }),
@@ -40,8 +40,8 @@ export default function Register() {
 
     return (
         <div>
-            <h1>Register</h1>
-            {isError && <div style={{color:"red"}}>'Error: User Already Exists'</div>}
+            <h1>Login</h1>
+            {isError && <div style={{color:"red"}}>'Invalid Login'</div>}
             <Form 
             // style={{display:"flex", flexwrap:"wrap", width:600+"px", height:600+"px", justifyContent:"center"}}
             style={{margin:"auto", width:"400px"}}
@@ -74,7 +74,7 @@ export default function Register() {
             </Form.Item>
         
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button onClick={register} type="primary" htmlType="submit">
+                <Button onClick={login} type="primary" htmlType="submit">
                 Submit
                 </Button>
             </Form.Item>

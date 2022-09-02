@@ -1,15 +1,17 @@
-import React, {Component} from 'react';
+import {React, Component, useState, useContext} from 'react';
 import { Link } from 'react-router-dom';
 import Register from './Register';
 import "antd/dist/antd.css";
+import { CredentialsContext } from '../App';
 
-export default class Welcome extends Component {
-  render() {
+export default function Welcome() {
+  const [credentials] = useContext(CredentialsContext);
     return (
       <div>
-        <h1>Welcome!</h1>
-        <Link to="/register" >Register</Link>
+        <h1>Welcome {credentials && credentials.username}!</h1>
+        {!credentials && <Link to="/register" >Register</Link>}
+        <br />
+        {!credentials && <Link to="/login" >Login</Link>}
       </div>
     )
-  }
 }
