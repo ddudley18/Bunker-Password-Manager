@@ -1,6 +1,5 @@
-import {React, Component, useState, useContext} from 'react';
+import {React, useContext} from 'react';
 import { Link } from 'react-router-dom';
-import Register from './Register';
 import "antd/dist/antd.css";
 import { CredentialsContext } from '../App';
 import Passwords from "../components/Passwords"
