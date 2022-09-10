@@ -13,14 +13,15 @@ export default function Login() {
     const [isError, setIsError] = useState(false);
     const [, setCredentials] = useContext(CredentialsContext);
 
-    const login = () => {
+    const login = (e) => {
+        e.preventDefault();
         axios.post('http://localhost:4000/login', JSON.stringify({
             username: username,
             password: password,
         }),
         {
             headers: {
-                'Content-Type':  'application/json'
+                'Content-Type':  'application/json',
             }
         })
         .then((response) => {

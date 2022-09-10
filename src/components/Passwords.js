@@ -1,15 +1,13 @@
 import React, {useEffect, useState, useContext} from "react";
 import { CredentialsContext } from "../App";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Passwords() {
     const [passwords, setPasswords] = useState([]);
     const [passwordText, setPasswordText] = useState("");
+    const [isPasswords, setIsPasswords] = useState(false);
     const [credentials] = useContext(CredentialsContext);
-
-    useEffect(()  => {
-
-    }, [passwords]);
 
     const persist = (newPasswords) => {
         axios.post('http://localhost:4000/passwords', 
@@ -27,6 +25,24 @@ export default function Passwords() {
             });
     }
 
+    useEffect(() => {
+        axios.get('http://localhost:4000/passwords',
+        {
+            headers: {
+                'Content-Type':  'application/json',
+                "Authorization": `Basic ${credentials.username}:${credentials.password}`,
+            }
+        })
+            .then((passwords) => {
+                if (passwords.data != "EMPTY") {
+                    setPasswords(passwords.data);
+                    setIsPasswords(true);
+                } else {
+                    setIsPasswords(false);
+                }
+            });
+    }, []);
+
     const addPassword = (e) => {
         e.preventDefault();
         if (!passwordText) return;
@@ -37,17 +53,26 @@ export default function Passwords() {
         persist(newPasswords);
     }
 
-    const togglePassword = (index) => {
+    const togglePassword = (id) => {
         const newPasswordList = [...passwords];
-        newPasswordList[index].checked = !newPasswordList[index].checked;
+        const passwordItem = newPasswordList.find((password) => password.id === id);
+        passwordItem.checked = !passwordItem.checked;
         setPasswords(newPasswordList);
+        persist(newPasswordList);
     }
+
+    const getPasswords = () => {
+        return passwords;
+    };
 
     return (
         <div>
-            {passwords.map((password,index) => (
-                <div key={index}>
-                    <input onChange={() => togglePassword(index)} type="checkbox" />
+            {passwords && getPasswords().map((password) => (
+                <div key={password.id}>
+                    <input
+                        checked={password.checked}
+                        onChange={() => togglePassword(password.id)} 
+                        type="checkbox" />
                     <label>{password.text}</label>
                 </div>
             ))}
